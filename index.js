@@ -1,12 +1,15 @@
 const puppeteer = require('puppeteer');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
-const scrap = (async () => {
-  const browser = await puppeteer.launch({ headless: "new" });
+class Scraper {
 
-  const page = await browser.newPage();
+  async scrap(url) {
+    const browser = await puppeteer.launch({ headless: "new" });
+    
+    const page = await browser.newPage();
 
-  await page.goto('https://querobolsa.com.br/cursos-e-faculdades/administracao');
+  //await page.goto('https://querobolsa.com.br/cursos-e-faculdades/administracao');
+  await page.goto(url);
   await page.waitForSelector('.offer-recommendation-carousel-card__card');
 
   const data = await page.evaluate(() => {
@@ -50,5 +53,7 @@ const scrap = (async () => {
     .catch(error => console.error('Erro ao exportar dados:', error));
 
   await browser.close();
-})();
-module.exports = {scrap}
+  return data;
+};
+}
+module.exports = {Scraper}
